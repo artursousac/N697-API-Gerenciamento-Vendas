@@ -40,3 +40,34 @@ async def put_organizador(id: str, organizador: Organizador):
 async def delete_organizador(id: str):
     collection_Organizadores.find_one_and_delete({"_id": ObjectId(id)})
     return {"message": "deletado"}
+
+@router.get("/participantes")
+async def get_participantes(inicio: int = Query(0), fim: int = None):
+    """participantes = listaParticipantes(collection_Participantes.find())"""
+    totalParticipantes = collection_Participantes.count_documents({})
+    if fim is None:
+        fim = totalParticipantes
+    limit = fim+1 - inicio
+    participantesCursor = listaParticipantes(collection_Participantes.find().skip(inicio).limit(limit))
+    participantes = list(participantesCursor)
+    return participantes
+
+@router.get("/participante/{id}")
+async def get_participante(id):
+    participante = unicoParticipante(collection_Participantes.find_one({"_id": ObjectId(id)}))
+    return participante
+
+    @router.post("/participante")
+async def post_participante(participante: Participante):
+    idParticipante = collection_Participantes.insert_one(dict(participante)).inserted_id
+    return {"message": "participante criado com sucesso: " + str(idParticipante)}
+
+    @router.put("/participante/{id}")
+async def put_participante(id: str, participante: Participante):
+    participanteUpdate = collection_Participantes.find_one_and_replace({"_id": ObjectId(id)}, dict(participante))
+    return {"message": "participante atualizado com sucesso" + str(participanteUpdate)}
+
+    @router.delete("/participante/{id}")
+async def delete_participante(id: str):
+    collection_Participantes.find_one_and_delete({"_id": ObjectId(id)})
+    return {"message": "deletado"}
