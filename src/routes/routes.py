@@ -57,19 +57,19 @@ async def get_participantes(inicio: int = Query(0), fim: int = None):
 @router.get("/participante/{id}")
 async def get_participante(id):
     participante = unicoParticipante(collection_Participantes.find_one({"_id": ObjectId(id)}))
-    return participante
+    return participante
 
-    @router.post("/participante")
+@router.post("/participante")
 async def post_participante(participante: Participante):
     idParticipante = collection_Participantes.insert_one(dict(participante)).inserted_id
     return {"message": "participante criado com sucesso: " + str(idParticipante)}
 
-    @router.put("/participante/{id}")
+@router.put("/participante/{id}")
 async def put_participante(id: str, participante: Participante):
     participanteUpdate = collection_Participantes.find_one_and_replace({"_id": ObjectId(id)}, dict(participante))
     return {"message": "participante atualizado com sucesso" + str(participanteUpdate)}
 
-    @router.delete("/participante/{id}")
+@router.delete("/participante/{id}")
 async def delete_participante(id: str):
     collection_Participantes.find_one_and_delete({"_id": ObjectId(id)})
-    return {"message": "deletado"}
+    return {"message":"deletado"}
