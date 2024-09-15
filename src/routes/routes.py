@@ -6,7 +6,7 @@ from src.schema.eventoSchema import *
 from src.schema.organizadorSchema import *
 from src.schema.participanteSchema import *
 from src.schema.patrocinadorSchema import *
-
+from src.schema.localSchema import *
 
 router = APIRouter()
 
@@ -127,3 +127,34 @@ async def get_patrocinador(id):
 async def post_patrocinador(patrocinador: Patrocinador):
     idPatrocinador = collection_Patrocinadores.insert_one(dict(patrocinador)).inserted_id
     return {"message": "patrocinador criado com sucesso: " + str(idPatrocinador)}
+
+@router.get("/locais")
+async def get_locais(inicio: int = Query(0), fim: int = None):
+    """locais = listaLocais(collection_Locais.find())"""
+    totalLocais = collection_Locais.count_documents({})
+    if fim is None:
+        fim = totalLocais
+    limit = fim+1 - inicio
+    locaisCursor = listaLocais(collection_Locais.find().skip(inicio).limit(limit))
+    locais = list(locaisCursor)
+    return locais
+
+@router.get("/local/{id}")
+async def get_local(id):
+    local = unicoLocal(collection_Locais.find_one({"_id": ObjectId(id)}))
+    return local
+
+@router.post("/local")
+async def post_local(local: Local):
+    idLocal = collection_Locais.insert_one(dict(local)).inserted_id
+    return {"message": "local criado com sucesso: " + str(idLocal)}
+
+@router.put("/local/{id}")
+async def put_local(id: str, local: Local):
+    localUpdate = collection_Locais.find_one_and_replace({"_id": ObjectId(id)}, dict(local))
+    return {"message": "local atualizado com sucesso" + str(localUpdate)}
+    
+@router.delete("/local/{id}")
+async def delete_local(id: str):
+    collection_Locais.find_one_and_delete({"_id": ObjectId(id)})
+    return {"message": "deletado"}            

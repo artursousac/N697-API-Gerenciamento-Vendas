@@ -31,3 +31,9 @@ class Patrocinador(BaseModel):
     createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
     modifiedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
+class Local(BaseModel):
+    nome: str
+    endereco: str
+    createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
+    modifiedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
+

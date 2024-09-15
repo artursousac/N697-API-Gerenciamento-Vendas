@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 def unicoEvento(evento) -> dict:
     return {
         "id": str(evento["_id"]),
