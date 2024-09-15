@@ -11,4 +11,4 @@ def unicoParticipante(participante) -> dict:
 
 
 def listaParticipantes(participantes) -> list:
-    return [unicoParticipante(participante) for participante in participantes]
+    return [unicoParticipante(participante) for participante in participantes]
