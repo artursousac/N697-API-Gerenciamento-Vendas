@@ -10,3 +10,5 @@ client = MongoClient(uri)
 
 db = client.GerenciamentoDeEventos
 
+collection_Organizadores = db["Organizadores"]
+
