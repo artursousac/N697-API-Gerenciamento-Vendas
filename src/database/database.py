@@ -12,3 +12,5 @@ db = client.GerenciamentoDeEventos
 
 collection_Organizadores = db["Organizadores"]
 
+collection_Participantes = db["Participantes"]
+
