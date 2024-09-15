@@ -4,6 +4,7 @@ from src.model.models import *
 from src.database.database import *
 from src.schema.organizadorSchema import *
 from src.schema.participanteSchema import *
+from src.schema.patrocinadorSchema import *
 
 
 router = APIRouter()
@@ -43,6 +44,7 @@ async def delete_organizador(id: str):
     collection_Organizadores.find_one_and_delete({"_id": ObjectId(id)})
     return {"message": "deletado"}
 
+
 @router.get("/participantes")
 async def get_participantes(inicio: int = Query(0), fim: int = None):
     """participantes = listaParticipantes(collection_Participantes.find())"""
@@ -73,3 +75,24 @@ async def put_participante(id: str, participante: Participante):
 async def delete_participante(id: str):
     collection_Participantes.find_one_and_delete({"_id": ObjectId(id)})
     return {"message":"deletado"}
+
+@router.get("/patrocinadores")
+async def get_patrocinadores(inicio: int = Query(0), fim: int = None):
+    """patrocinadores = listaPatrocinadores(collection_Patrocinadores.find())"""
+    totalPatrocinadores = collection_Patrocinadores.count_documents({})
+    if fim is None:
+        fim = totalPatrocinadores
+    limit = fim+1 - inicio
+    patrocinadoresCursor = listaOrganizadores(collection_Patrocinadores.find().skip(inicio).limit(limit))
+    patrocinadores = list(patrocinadoresCursor)
+    return patrocinadores
+
+@router.get("/patrocinador/{id}")
+async def get_patrocinador(id):
+    patrocinador = unicoPatrocinador(collection_Patrocinadores.find_one({"_id": ObjectId(id)}))
+    return patrocinador
+
+@router.post("/patrocinador")
+async def post_patrocinador(patrocinador: Patrocinador):
+    idPatrocinador = collection_Patrocinadores.insert_one(dict(patrocinador)).inserted_id
+    return {"message": "patrocinador criado com sucesso: " + str(idPatrocinador)}
