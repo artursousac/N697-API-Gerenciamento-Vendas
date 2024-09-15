@@ -10,7 +10,7 @@ client = MongoClient(uri)
 
 db = client.GerenciamentoDeEventos
 
+collection_Eventos = db["Eventos"]
 collection_Organizadores = db["Organizadores"]
-
 collection_Participantes = db["Participantes"]
 collection_Patrocinadores = db["Patrocinadores"]

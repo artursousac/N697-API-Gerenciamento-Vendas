@@ -2,6 +2,7 @@ from fastapi import APIRouter, Query
 from bson import ObjectId
 from src.model.models import *
 from src.database.database import *
+from src.schema.eventoSchema import *
 from src.schema.organizadorSchema import *
 from src.schema.participanteSchema import *
 from src.schema.patrocinadorSchema import *
@@ -12,6 +13,36 @@ router = APIRouter()
 @router.get("/")
 async def RotaInicial():
     return {"message": "bem-vindo à primeira rota do projeto"}
+
+@router.get("/eventos")
+async def get_eventos(inicio: int = Query(0), fim: int = None):
+    totalEventos = collection_Eventos.count_documents({})
+    if fim is None:
+        fim = totalEventos
+    limit = fim+1 - inicio
+    eventosCursor = listaEventos(collection_Eventos.find().skip(inicio).limit(limit))
+    eventos = list(eventosCursor)
+    return eventos
+
+@router.get("/evento/{id}")
+async def get_evento(id):
+    evento = unicoEvento(collection_Eventos.find_one({"_id": ObjectId(id)}))
+    return evento
+
+@router.post("/evento")
+async def post_evento(evento: Evento):
+    idEvento = collection_Eventos.insert_one(dict(evento)).inserted_id
+    return {"message": "evento criado com sucesso: "+str(idEvento)}
+
+@router.put("/evento/{id}")
+async def put_evento(id: str, evento: Evento):
+    eventoUpdate = collection_Eventos.find_one_and_replace({"_id": ObjectId(id)}, dict(evento))
+    return {"message": "evento atualizado com sucesso" + str(eventoUpdate)}
+
+@router.delete("/evento/{id}")
+async def delete_evento(id: str):
+    collection_Eventos.find_one_and_delete({"_id": ObjectId(id)})
+    return {"message": "deletado"}
 
 @router.get("/organizadores")
 async def get_organizadores(inicio: int = Query(0), fim: int = None):
