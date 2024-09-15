@@ -3,6 +3,8 @@ from bson import ObjectId
 from src.model.models import *
 from src.database.database import *
 from src.schema.organizadorSchema import *
+from src.schema.participanteSchema import *
+
 
 router = APIRouter()
 
