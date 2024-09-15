@@ -8,3 +8,8 @@ class Organizador(BaseModel):
     createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
     modifiedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
+class Participante(BaseModel):
+    nome: str
+    email: str
+    createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
+    modifiedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
